@@ -1,0 +1,54 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "UI" {
+  class MainWindow
+  class CLIInterface
+}
+
+package "Core" {
+  class SAMDecoder
+  class DelegateManager
+  class DelegateWorker
+}
+
+package "Delegates" {
+  class SAMDecoderDelegate
+  class MakeTTreeDecoderDelegate
+  class RootTHttpServerDecoderDelegate
+  class WaveDisplayDecoderDelegate
+}
+
+package "Model" {
+  class Board
+  class Connection
+}
+
+' package "Helpers" {
+'   class Logger
+'   class MemOps
+'   class PONConverter
+' }
+
+package "Lib" {
+  class fakernet
+}
+!include architecture_classes.puml
+UI --|> SAMDecoder : creates
+UI --|> Board : creates
+UI --|> Delegates : creates
+SAMDecoder --> DelegateManager : uses
+DelegateManager --> DelegateWorker : has many
+Board --> Connection : has a
+Connection --> fakernet : uses
+SAMDecoder -[hidden]right-> Board : uses
+SAMDecoderDelegate ..|> MakeTTreeDecoderDelegate : subclass
+SAMDecoderDelegate ..|> RootTHttpServerDecoderDelegate : subclass
+SAMDecoderDelegate ..|> WaveDisplayDecoderDelegate : subclass
+RootTHttpServerDecoderDelegate -[hidden]down- WaveDisplayDecoderDelegate
+WaveDisplayDecoderDelegate -[hidden]down- MakeTTreeDecoderDelegate
+Model -[hidden]down- UI
+Core -[hidden]right- Model
+Delegates -[hidden]right- Core
+
+@enduml

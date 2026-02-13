@@ -1,0 +1,40 @@
+@startuml
+skinparam packageStyle rectangle
+hide methods
+package "UI" {
+}
+
+package "Core" {
+  class SAMDecoder
+  class DelegateManager
+}
+
+package "Delegates" {
+  class SAMDecoderDelegate
+}
+
+package "Model" {
+  class Board
+  class Connection
+}
+
+package "Lib" {
+  class fakernet
+}
+
+UI --> SAMDecoder : uses
+UI --> Board : uses
+UI --> SAMDecoderDelegate : creates subclasses of
+SAMDecoder --> DelegateManager : uses
+DelegateManager --> DelegateWorker : has many
+Board --> Connection : has a
+Connection --> fakernet : uses
+DelegateManager <|-- SAMDecoderDelegate : addTo
+SAMDecoderDelegate ..|> MakeTTreeDecoderDelegate : subclass
+SAMDecoderDelegate ..|> RootTHttpServerDecoderDelegate : subclass
+SAMDecoderDelegate ..|> WaveDisplayDecoderDelegate : subclass
+WaveDisplayDecoderDelegate -[hidden]down- MakeTTreeDecoderDelegate
+Core -[hidden]right- Model
+Delegates -[hidden]right- Core
+
+@enduml

@@ -1,0 +1,68 @@
+# Build directories
+build/
+build-*/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# dev directories
+scripts/*
+testScripts/*
+
+
+# Compiled binaries
+root-qt-quickstart
+SAMDAQ
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+
+# Qt MOC files
+*_autogen/
+moc_*.cpp
+moc_*.h
+ui_*.h
+qrc_*.cpp
+
+# ROOT files
+*.root
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python cache (if using Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Conda environment files (keep minimal, ignore full export)
+environment.yml
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+data/*
+
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+output/*
+*.lock

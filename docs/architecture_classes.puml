@@ -1,0 +1,233 @@
+skinparam classAttributeIconSize 0
+
+class MainWindow {
+'   +MainWindow(multithreaded, parent)
+'   +~MainWindow()
+'  +appendResult(text)
+'  +showHistogram()
+'  +updateUI()
+
+    // ...
+'  +onRefreshStatus()
+'  +onTogglePower()
+'  +onTriggerTypeChanged(index)
+'  +onTriggerThresholdChanged(value)
+    +onConnect() // Toggle for disconnect
+'  +onPing()
+'  +onRead()
+'  +onWrite()
+'  +onIpEntryChanged(text)
+    +onStartAcquisition() // Toggle for stop
+'  +displayValuesFromBoard(board)
+'  +onBrowseOutputDir()
+'  +onPolarityChanged()
+'  +onGainShapingChanged()
+'  +onNumSamplesChanged()
+'  +onChipSelectionChanged(chipIndex)
+'  +onChannelSelectionChanged(channelIndex)
+'  +onPretriggerChanged(index)
+'  +onUpdateIntervalChanged(value)
+'  +onBrowseInputBinFile()
+'  +onProcessOffline()
+}
+
+class CLIInterface {
+'  +CLIInterface()
+'  +~CLIInterface()
+'  +run(argc, argv)
+'  -showHelp()
+'  -showStatus()
+'  -processCommand(command)
+'  -parseArguments(argc, argv)
+'  -interactiveMode()
+'  -runScript(scriptPath)
+'  -refreshStatus()
+'  -togglePower(turnOn)
+'  -setTriggerType(type)
+    -connectBoard()
+    -disconnectBoard()
+'  -pingBoard()
+'  -readRegister(address)
+'  -writeRegister(address, value)
+'  -setPolarity(polarity)
+'  -setGainShaping(gainShaping)
+'  -setNumSamples(numSamples)
+'  -setOutputDir(dir)
+'  -setOutputFile(filename)
+'  -setIP(ip)
+'  -setTriggerThreshold(value)
+'  -setPretrigger(value)
+    -startAcquisition()
+    -stopAcquisition()
+    // ...
+'  -toggleOnlineWaveforms(enable)
+'  -processOffline(inputFile, outputFile)
+'  -showMalformedBlocksStats()
+'  -resetMalformedBlocksStats()
+'  -printMessage(message)
+'  -printError(error)
+'  -sleepSeconds(secondsStr)
+'  -displayProgress(progress)
+'  -splitString(str, delimiter)
+'  -parseHexOrDec(str, ok)
+'  -getCurrentTimestamp()
+}
+
+' Helpers
+'  class Logger {
+'   +Logger(filename, console_output)
+'   +~Logger()
+'   +setLogFile(filename)
+'   +setLogLevel(level)
+'   +enableConsoleOutput(enable)
+'   +debug(message)
+'   +info(message)
+'   +warning(message)
+'   +error(message)
+'   +operator<<(message)
+'   +operator<<(level)
+' }
+
+' class MemOps <<utility>> {
+'   +readWord(buffer)
+'   +read10BitData(data, index)
+'   +extractAndAssignChannels_8ch(data, ch, sample_number, NUM_CHANNELS)
+'   +extractAndAssignChannels_4ch(data, ch, sample_number, NUM_CHANNELS)
+' }
+
+' class Constants <<utility>> {
+'   +K_DEFAULT_IP
+'   +K_DEFAULT_OUT_FNAME
+' }
+
+' Model - Options / Converters
+' class PONConverter {
+'   +toPON_reg(powerOn, polarity, gain, shaping, triggerType, numSamples, triggerThreshold, pretrigger)
+'   +fromPON_regToPowerOn(value)
+'   +fromPON_regToTriggerType(value)
+'   +fromPON_regToGain(value)
+'   +fromPON_regToShaping(value)
+'   +fromPON_regToPolarity(value)
+'   +fromPON_regToNumSamples(value)
+'   +fromPON_regToTriggerThreshold(value)
+'   +fromPON_regToPretrigger(value)
+' }
+
+' class GainStrings {
+'   +toString(gain)
+' }
+' class ShapingStrings {
+'   +toString(shaping)
+' }
+' class NumSamplesStrings {
+'   +toString(numSamples)
+' }
+' class TriggerTypeStrings {
+'   +toString(triggerType)
+' }
+
+' Model - Board / Connection / Decoder
+class Board {
+'   +Board(ip, outDir)
+'   +setProgressCallback(callback)
+    +connect()
+    +ping()
+    +readRegister(address, value)
+    +writeRegister(address, value)
+'   +getStatusString()
+'   +getLastError()
+'   +powerOnOff(on)
+    +startAcquisition(decoder)
+    +stopAcquisition()
+    // others
+'   +refreshPONValues()
+'   +setPONValues(powerOn, polarity, triggerType, gain, shaping, numSamples, triggerThreshold, pretrigger)
+'   +setCurrentPONValues()
+'   +setTriggerType(type)
+'   +setGain(gain)
+'   +setShaping(shaping)
+'   +setPolarity(polarity)
+'   +setNumSamples(numSamples)
+'   +setupProgressMonitoring()
+'   +cleanupProgressMonitoring()
+}
+
+class Connection {
+'   +Connection()
+'   +~Connection()
+    +connectToBoard(host, reliable, error)
+    +disconnect()
+    +isConnected()
+    +pingBoard(host, error)
+    +readRegister(reg_addr, value, error)
+    +writeRegister(reg_addr, value, error)
+    +getFnetClient()
+}
+
+class SAMDecoderDelegate {
+    +~SAMDecoderDelegate()
+    +onAllSamplesDecoded(event, chip, channels, timestamp)
+    +acquisitionWillStop()
+}
+
+class SAMDecoder {
+'   +SAMDecoder(baseName, multithreaded)
+'   +~SAMDecoder()
+    +decodeFromTcp(buffer, fill, handled, cur_mark)
+    +decodeFromFile(filename)
+    +stop()
+'   +getMalformedBlocksCount()
+'   +resetMalformedBlocksCount()
+'   +getTotalEventsCount()
+'   +close()
+    +addDelegate(delegate)
+    +removeDelegate(delegate)
+    // ...
+'   +removeDelegateOfType(type)
+'  +clearDelegates()
+}
+
+class DelegateManager {
+'   +DelegateManager()
+'   +~DelegateManager()
+    +addDelegate(delegate)
+    +removeDelegate(delegate)
+    +removeDelegateOfType(type)
+    +clearDelegates()
+    +queueTaskForDelegate(delegate, task)
+    +queueTaskForAllDelegates(taskFactory)
+    +getDelegatesCopy()
+    +willStopAcquisition()
+}
+
+class DelegateWorker {
+'   +DelegateWorker()
+'   +~DelegateWorker()
+    +start()
+    +stop()
+    +queueTask(task)
+    +isRunning()
+}
+
+class MakeTTreeDecoderDelegate {
+'   +MakeTTreeDecoderDelegate(rootFileName, numChannels, maxNumSamples)
+'   +~MakeTTreeDecoderDelegate()
+    +onAllSamplesDecoded(event, chip, channels, timestamp)
+    +acquisitionWillStop()
+    +close()
+}
+
+class RootTHttpServerDecoderDelegate {
+'   +RootTHttpServerDecoderDelegate(server_ip)
+    +acquisitionWillStop()
+}
+
+class WaveDisplayDecoderDelegate {
+'   +~WaveDisplayDecoderDelegate()
+    +onAllSamplesDecoded(event, chip, channels, timestamp)
+    +createWaveformCanvasAndGraph(chip, channel)
+    +openAllCanvases()
+    +setUpdateInterval(interval)
+}
+
+ 

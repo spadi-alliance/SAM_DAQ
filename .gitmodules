@@ -1,0 +1,3 @@
+[submodule "lib/fakernet"]
+	path = lib/fakernet
+	url = https://gitlab.com/inkdot7/fakernet.git
