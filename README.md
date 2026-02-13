@@ -13,6 +13,12 @@ A Qt5/ROOT-based Data Acquisition system for SAMIDARE BOARD.
 ```bash
 # Install environment from pixi.toml
 pixi install
+
+# Initialize and update submodules
+git submodule update --init --recursive
+
+# To pull latest submodule updates (optional)
+git submodule update --remote --recursive
 ```
 
 ### 2. Build the Project
