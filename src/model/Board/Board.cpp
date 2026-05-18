@@ -432,6 +432,7 @@ QString Board::setPONValues(bool powerOn, bool polarity, TriggerType triggerType
         this->gain = gain;
         this->shaping = shaping;
         this->numSamples = numSamples;
+        this->pretrigger = pretrigger;
         this->triggerThreshold = triggerThreshold;
         this->externalClkEnable = externalClkEnable;
         lastUpdate = QDateTime::currentDateTime();

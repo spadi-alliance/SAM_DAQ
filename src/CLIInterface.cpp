@@ -385,6 +385,18 @@ void CLIInterface::showStatus() {
     std::cout << "Gain: " << GainStrings::toString(fBoard->gain) << "\n";
     std::cout << "Shaping: " << ShapingStrings::toString(fBoard->shaping) << "\n";
     std::cout << "Samples: " << NumSamplesStrings::toString(fBoard->numSamples) << "\n";
+
+    int preSamples = 0;
+    switch (fBoard->pretrigger) {
+        case 0: preSamples = 0; break;
+        case 1: preSamples = 4; break;
+        case 2: preSamples = 8; break;
+        case 3: preSamples = 16; break;
+        default: preSamples = static_cast<int>(fBoard->pretrigger); break;
+    }
+
+    std::cout << "Pre Samples: " << preSamples << " samples\n";
+    std::cout << "External Clock: " << (fBoard->externalClkEnable ? "On" : "Off") << "\n";
     std::cout << "Last Update: " << fBoard->lastUpdate.toString("yyyy-MM-dd HH:mm:ss").toStdString() << "\n";
     std::cout << "Output Directory: " << outputDir << "\n";
     std::cout << "Output Filename: " << outputFileName << "\n";
